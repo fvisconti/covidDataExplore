@@ -86,7 +86,7 @@ def altPlotNewICU(df: pd.DataFrame):
         fontSize=24,
     )
 
-    tiChart.save('newTI.png', scale_factor=2.0)
+    # tiChart.save('newTI.png', scale_factor=2.0)
 
     return tiChart
 
@@ -109,7 +109,7 @@ def altPlotNewDeaths(df: pd.DataFrame):
         fontSize=24,
     )
 
-    dChart.save('newDeaths.png', scale_factor=2.0)
+    # dChart.save('newDeaths.png', scale_factor=2.0)
 
     return dChart
 
