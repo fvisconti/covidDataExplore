@@ -48,7 +48,7 @@ def altPlotNewICU(df: pd.DataFrame):
 
     return tiChart
 
-def al tPlotNewDeaths(df: pd.DataFrame):
+def altPlotNewDeaths(df: pd.DataFrame):
     dChart = alt.Chart(df[df['denominazione_regione'] != 'Molise']).mark_line().encode(
         alt.X('data:T', title=None),
         alt.Y('3dma_deaths:Q', title=None),
