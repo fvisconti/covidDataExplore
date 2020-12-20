@@ -100,14 +100,14 @@ def main():
 
     altICUChart = altPlotNewICU(df[df['denominazione_regione'] != 'Molise'])
     altDChart = altPlotNewDeaths(df[df['denominazione_regione'] != 'Molise'])
-    cumDchart = altPlotCumDeaths(df)
+    # cumDchart = altPlotCumDeaths(df)
 
     df.drop(columns=['deceduti', '3dma_ti', '3dma_deaths'], axis=1, inplace=True)
 
     st.write(df)
     st.altair_chart(altICUChart)
     st.altair_chart(altDChart)
-    st.altair_chart(cumDchart)
+    # st.altair_chart(cumDchart)
 
 if __name__ == "__main__":
     main()
