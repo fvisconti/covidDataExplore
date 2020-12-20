@@ -1,30 +1,8 @@
 import streamlit as st
-# To make things easier later, we're also importing numpy and pandas for
-# working with sample data.
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import altair as alt
-sns.set()
-sns.set_palette('husl', 8)
 alt.renderers.enable(embed_options={'theme': 'quartz'})
-
-def fetch_data(days: int, offset: int=3):
-    df = pd.DataFrame()
-    for i in range(days):
-        url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni-202012" + str(i+3).zfill(2) + ".csv"
-        dum = pd.read_csv(url, usecols=["data","denominazione_regione", "ingressi_terapia_intensiva"])
-        df = df.append(dum, ignore_index=True)
-
-    df['3dma_ti'] = df.groupby('denominazione_regione')['ingressi_terapia_intensiva'].transform(lambda x: x.rolling(window=3, min_periods=2, center=True).mean())
-    df['data'] = pd.to_datetime(df['data'], format="%Y-%m-%d")
-
-    # list of all region names
-    regions = df['denominazione_regione'].unique().tolist()
-    regions.pop(10)
-    
-    return df, regions
 
 def fetch_all_series():
     df = pd.DataFrame()
@@ -45,26 +23,6 @@ def fetch_all_series():
     df['3dma_deaths'] = df.groupby('denominazione_regione')['nuovi_decessi'].transform(lambda x: x.rolling(window=3, min_periods=2, center=True).mean())
 
     return df
-
-def plotNewICU(df: pd.DataFrame, regions: list):
-    # All regions at once.
-    fig, axn = plt.subplots(5, 4, sharex=True, sharey=True, figsize=(20, 20))
-    fig.suptitle('Terapie intensive: nuovi ingressi', y=0.95, fontsize=30)
-
-    for i, ax in enumerate(axn.flat):
-        if i >= len(regions):
-            break
-        region = regions[i]
-        ax.tick_params(labelrotation=45)
-
-        ax.set_title(regions[i])
-        # ax.set_yscale('log')
-
-        ax.plot(df.loc[df.denominazione_regione==region]["data"], df.loc[df.denominazione_regione==region]['3dma_ti'])
-
-    plt.savefig("newICU_3dma.png")
-
-    return fig
 
 def altPlotNewICU(df: pd.DataFrame):
     
