@@ -43,6 +43,8 @@ def altPlotNewICU(df: pd.DataFrame, save_chart=False):
     ).configure_title(
         color='gray',
         fontSize=24,
+    ).configure_line(
+        size=4
     )
 
     if save_chart:
@@ -68,6 +70,8 @@ def altPlotNewDeaths(df: pd.DataFrame, save_chart=False):
     ).configure_title(
         color='gray',
         fontSize=24,
+    ).configure_line(
+        size=4
     )
 
     if save_chart:
