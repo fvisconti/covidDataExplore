@@ -44,7 +44,7 @@ def altPlotNewICU(df: pd.DataFrame):
         fontSize=24,
     )
 
-    # tiChart.save('newTI.png', scale_factor=2.0)
+    tiChart.save('newTI.png', scale_factor=2.0)
 
     return tiChart
 
@@ -67,7 +67,7 @@ def altPlotNewDeaths(df: pd.DataFrame):
         fontSize=24,
     )
 
-    # dChart.save('newDeaths.png', scale_factor=2.0)
+    dChart.save('newDeaths.png', scale_factor=2.0)
 
     return dChart
 
@@ -76,6 +76,7 @@ def altPlotCumDeaths(df: pd.DataFrame):
     chart = alt.Chart(cumDeaths).mark_bar().encode(
         x = 'deceduti:Q',
         y = alt.Y('denominazione_regione:N', sort='-x'),
+        tooltip = ['deceduti']
         # color=alt.Color('denominazione_regione:N', legend=None, scale=alt.Scale(scheme='dark2')),
     ).properties(
         width=800,
