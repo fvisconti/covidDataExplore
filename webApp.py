@@ -24,7 +24,7 @@ def fetch_all_series():
 
     return df
 
-def altPlotNewICU(df: pd.DataFrame):
+def altPlotNewICU(df: pd.DataFrame, save_chart=False):
     
     tiChart = alt.Chart(df).mark_line().encode(
         alt.X('data:T', title=None),
@@ -44,11 +44,12 @@ def altPlotNewICU(df: pd.DataFrame):
         fontSize=24,
     )
 
-    tiChart.save('newTI.png', scale_factor=2.0)
+    if save_chart:
+        tiChart.save('newTI.png', scale_factor=2.0)
 
     return tiChart
 
-def altPlotNewDeaths(df: pd.DataFrame):
+def altPlotNewDeaths(df: pd.DataFrame, save_chart=False):
     dChart = alt.Chart(df[df['denominazione_regione'] != 'Molise']).mark_line().encode(
         alt.X('data:T', title=None),
         alt.Y('3dma_deaths:Q', title=None),
@@ -67,7 +68,8 @@ def altPlotNewDeaths(df: pd.DataFrame):
         fontSize=24,
     )
 
-    dChart.save('newDeaths.png', scale_factor=2.0)
+    if save_chart:
+        dChart.save('newDeaths.png', scale_factor=2.0)
 
     return dChart
 
