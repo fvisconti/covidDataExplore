@@ -31,6 +31,7 @@ def altPlotNewICU(df: pd.DataFrame, save_chart=False):
         alt.Y('3dma_ti:Q', title=None),
         color=alt.Color('denominazione_regione:N', legend=None, scale=alt.Scale(scheme='dark2')),
         facet=alt.Facet('denominazione_regione:N', columns=4, title=None),
+        tooltip=[alt.Tooltip('ingressi_terapia_intensiva:Q', title='Ingressi TI')]
     ).properties(
         width=160,
         height=90,
@@ -55,6 +56,7 @@ def altPlotNewDeaths(df: pd.DataFrame, save_chart=False):
         alt.Y('3dma_deaths:Q', title=None),
         color=alt.Color('denominazione_regione:N', legend=None, scale=alt.Scale(scheme='dark2')),
         facet=alt.Facet('denominazione_regione:N', columns=4, title=None),
+        tooltip=[alt.Tooltip('nuovi_decessi:Q', title='Nuovi decessi')]
     ).properties(
         width=160,
         height=90,
