@@ -35,7 +35,7 @@ def altPlotNewICU(df: pd.DataFrame, save_chart=False):
     ).properties(
         width=160,
         height=90,
-        title='Terapie intensive: nuovi ingressi su base regionale'
+        title='Terapie intensive: nuovi ingressi'
     ).configure_view(
         strokeWidth=0
     ).configure_axis(
@@ -62,7 +62,7 @@ def altPlotNewDeaths(df: pd.DataFrame, save_chart=False):
     ).properties(
         width=160,
         height=90,
-        title='Nuovi decessi su base regionale'
+        title='Nuovi decessi'
     ).configure_view(
         strokeWidth=0
     ).configure_axis(
@@ -89,7 +89,7 @@ def altPlotCumDeaths(df: pd.DataFrame):
     ).properties(
         width=800,
         height=450,
-        title='Decessi cumulati su base regionale'
+        title='Decessi cumulati'
     ).configure_view(
         strokeWidth=0
     ).configure_axis(
@@ -103,7 +103,7 @@ def altPlotCumDeaths(df: pd.DataFrame):
 
 def main():
     
-    st.title("Terapie intensive: nuovi ingressi su base regionale")
+    st.title("Monitoraggio TI e decessi su base regionale")
 
     df = fetch_all_series()
 
