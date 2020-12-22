@@ -19,8 +19,8 @@ def fetch_all_series():
     df.drop(df[df.data < '2020-12-03'].index, inplace=True)
     df.reset_index(drop=True, inplace=True)
 
-    df['3dma_ti'] = df.groupby('denominazione_regione')['ingressi_terapia_intensiva'].transform(lambda x: x.rolling(window=3, min_periods=2, center=True).mean())
-    df['3dma_deaths'] = df.groupby('denominazione_regione')['nuovi_decessi'].transform(lambda x: x.rolling(window=3, min_periods=2, center=True).mean())
+    # df['3dma_ti'] = df.groupby('denominazione_regione')['ingressi_terapia_intensiva'].transform(lambda x: x.rolling(window=3, min_periods=2, center=True).mean())
+    # df['3dma_deaths'] = df.groupby('denominazione_regione')['nuovi_decessi'].transform(lambda x: x.rolling(window=3, min_periods=2, center=True).mean())
 
     return df
 
@@ -28,7 +28,7 @@ def altPlotNewICU(df: pd.DataFrame, save_chart=False):
     
     tiChart = alt.Chart(df).mark_line().encode(
         alt.X('data:T', title=None),
-        alt.Y('3dma_ti:Q', title=None),
+        alt.Y('rolling_mean:Q', title=None),
         color=alt.Color('denominazione_regione:N', legend=None, scale=alt.Scale(scheme='dark2')),
         facet=alt.Facet('denominazione_regione:N', columns=4, title=None),
         tooltip=[alt.Tooltip('ingressi_terapia_intensiva:Q', title='Ingressi TI')]
@@ -45,6 +45,10 @@ def altPlotNewICU(df: pd.DataFrame, save_chart=False):
         fontSize=24,
     ).configure_line(
         size=4
+    ).transform_window(
+        rolling_mean='mean(ingressi_terapia_intensiva)',
+        frame=[-1, 1],
+        groupby=['denominazione_regione']
     )
 
     if save_chart:
@@ -55,7 +59,7 @@ def altPlotNewICU(df: pd.DataFrame, save_chart=False):
 def altPlotNewDeaths(df: pd.DataFrame, save_chart=False):
     dChart = alt.Chart(df[df['denominazione_regione'] != 'Molise']).mark_line().encode(
         alt.X('data:T', title=None),
-        alt.Y('3dma_deaths:Q', title=None),
+        alt.Y('rolling_mean:Q', title=None),
         color=alt.Color('denominazione_regione:N', legend=None, scale=alt.Scale(scheme='dark2')),
         facet=alt.Facet('denominazione_regione:N', columns=4, title=None),
         tooltip=[alt.Tooltip('nuovi_decessi:Q', title='Nuovi decessi')]
@@ -72,6 +76,10 @@ def altPlotNewDeaths(df: pd.DataFrame, save_chart=False):
         fontSize=24,
     ).configure_line(
         size=4
+    ).transform_window(
+        rolling_mean='mean(nuovi_decessi)',
+        frame=[-1, 1],
+        groupby=['denominazione_regione']
     )
 
     if save_chart:
@@ -111,7 +119,7 @@ def main():
     altDChart = altPlotNewDeaths(df[df['denominazione_regione'] != 'Molise'])
     cumDchart = altPlotCumDeaths(df)
 
-    df.drop(columns=['deceduti', '3dma_ti', '3dma_deaths'], axis=1, inplace=True)
+    df.drop(columns=['deceduti'], axis=1, inplace=True)
 
     st.write(df)
     st.altair_chart(altICUChart)
