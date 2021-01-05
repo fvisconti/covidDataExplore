@@ -154,7 +154,7 @@ def main():
     altPrChart = altPosRate(df[df['denominazione_regione'] != 'Molise'])
     # cumDchart = altPlotCumDeaths(df)
 
-    df.drop(columns=['deceduti', 'nuovi_tamponi', 'tamponi', 'ricoverati_con_sintomi'], axis=1, inplace=True)
+    df.drop(columns=['deceduti', 'nuovi_tamponi', 'tamponi'], axis=1, inplace=True)
 
     st.write(df)
     st.altair_chart(altICUChart)
