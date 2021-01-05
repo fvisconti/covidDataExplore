@@ -15,12 +15,16 @@ def fetch_all_series():
     df.sort_values(by=['data'])
 
     df['nuovi_decessi'] = df.groupby('denominazione_regione')['deceduti'].apply(lambda x: x.diff().fillna(0))    
-    
+    df['nuovi_tamponi'] = df.groupby('denominazione_regione')['tamponi'].apply(lambda x: x.diff().fillna(0))
+    # df['nuovi_testati'] = df.groupby('denominazione_regione')['casi_testati'].apply(lambda x: x.diff().fillna(0))
+
+    # df['nuovi_testati'] = df['nuovi_testati'].clip(lower=0)
+    df['nuovi_tamponi'] = df['nuovi_tamponi'].clip(lower=0)
+
+    df['positivity_rate'] = np.round(df['nuovi_positivi'] / df['nuovi_tamponi'], 2)
+
     df.drop(df[df.data < '2020-12-03'].index, inplace=True)
     df.reset_index(drop=True, inplace=True)
-
-    # df['3dma_ti'] = df.groupby('denominazione_regione')['ingressi_terapia_intensiva'].transform(lambda x: x.rolling(window=3, min_periods=2, center=True).mean())
-    # df['3dma_deaths'] = df.groupby('denominazione_regione')['nuovi_decessi'].transform(lambda x: x.rolling(window=3, min_periods=2, center=True).mean())
 
     return df
 
@@ -109,6 +113,35 @@ def altPlotCumDeaths(df: pd.DataFrame):
 
     return chart
 
+def altPosRate(df: pd.DataFrame):
+    prChart = alt.Chart(df).mark_line().encode(
+        alt.X('data:T', title=None),
+        alt.Y('positivity_rate:Q', axis=alt.Axis(format='%'), title=None),
+        color=alt.Color('denominazione_regione:N', legend=None, scale=alt.Scale(scheme='dark2')),
+        facet=alt.Facet('denominazione_regione:N', columns=4, title=None),
+        tooltip=[alt.Tooltip('positivity_rate:Q', title='Tasso positivi al tampone')]
+    ).properties(
+        width=160,
+        height=90,
+        title='Tasso di positivi al tampone'
+    ).configure_view(
+        strokeWidth=0
+    ).configure_axis(
+        grid=False
+    ).configure_title(
+        color='gray',
+        fontSize=24,
+    ).configure_line(
+        size=4
+    )
+    # .transform_window(
+    #     rolling_mean='mean(positivity_rate)',
+    #     frame=[-1, 1],
+    #     groupby=['denominazione_regione']
+    # )
+
+    return prChart
+
 def main():
     
     st.title("Monitoraggio TI e decessi su base regionale")
@@ -117,14 +150,16 @@ def main():
 
     altICUChart = altPlotNewICU(df[df['denominazione_regione'] != 'Molise'])
     altDChart = altPlotNewDeaths(df[df['denominazione_regione'] != 'Molise'])
-    cumDchart = altPlotCumDeaths(df)
+    altPrChart = altPosRate(df[df['denominazione_regione'] != 'Molise'])
+    # cumDchart = altPlotCumDeaths(df)
 
-    df.drop(columns=['deceduti'], axis=1, inplace=True)
+    df.drop(columns=['deceduti', 'nuovi_tamponi'], axis=1, inplace=True)
 
     st.write(df)
     st.altair_chart(altICUChart)
     st.altair_chart(altDChart)
-    st.altair_chart(cumDchart)
+    st.altair_chart(altPrChart)
+    # st.altair_chart(cumDchart)
 
 if __name__ == "__main__":
     main()
