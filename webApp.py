@@ -7,7 +7,8 @@ alt.renderers.enable(embed_options={'theme': 'quartz'})
 def fetch_all_series():
     df = pd.DataFrame()
     url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
-    cols = ["data","denominazione_regione", "ingressi_terapia_intensiva", "deceduti"]
+    cols = ["data","denominazione_regione", "ingressi_terapia_intensiva", "deceduti",
+     "nuovi_positivi", "tamponi", "casi_testati", "ricoverati_con_sintomi"]
     iter_csv = pd.read_csv(url, iterator=True, chunksize=1000, parse_dates=['data',], usecols=cols)
     df = pd.concat([chunk[chunk['data'] > '2020-12-02'] for chunk in iter_csv])
 
