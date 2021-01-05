@@ -8,7 +8,7 @@ def fetch_all_series():
     df = pd.DataFrame()
     url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv"
     cols = ["data","denominazione_regione", "ingressi_terapia_intensiva", "deceduti",
-     "nuovi_positivi", "tamponi", "casi_testati", "ricoverati_con_sintomi"]
+     "nuovi_positivi", "tamponi", "casi_testati"]
     iter_csv = pd.read_csv(url, iterator=True, chunksize=1000, parse_dates=['data',], usecols=cols)
     df = pd.concat([chunk[chunk['data'] > '2020-12-02'] for chunk in iter_csv])
 
@@ -154,7 +154,7 @@ def main():
     altPrChart = altPosRate(df[df['denominazione_regione'] != 'Molise'])
     # cumDchart = altPlotCumDeaths(df)
 
-    df.drop(columns=['deceduti', 'nuovi_tamponi'], axis=1, inplace=True)
+    df.drop(columns=['deceduti', 'nuovi_tamponi', 'tamponi', 'ricoverati_con_sintomi'], axis=1, inplace=True)
 
     st.write(df)
     st.altair_chart(altICUChart)
