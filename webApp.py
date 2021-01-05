@@ -22,7 +22,7 @@ def fetch_all_series():
     # df['nuovi_testati'] = df['nuovi_testati'].clip(lower=0)
     df['nuovi_tamponi'] = df['nuovi_tamponi'].clip(lower=0)
 
-    df['positivity_rate'] = np.round(df['nuovi_positivi'] / df['nuovi_tamponi'], 2)
+    df['positivity_rate'] = np.round(df['nuovi_positivi'] * 100 / df['nuovi_tamponi'], 2)
 
     df.drop(df[df.data < '2020-12-03'].index, inplace=True)
     df.reset_index(drop=True, inplace=True)
@@ -117,7 +117,7 @@ def altPlotCumDeaths(df: pd.DataFrame):
 def altPosRate(df: pd.DataFrame):
     prChart = alt.Chart(df).mark_line().encode(
         alt.X('data:T', title=None),
-        alt.Y('positivity_rate:Q', axis=alt.Axis(format='%'), title=None),
+        alt.Y('positivity_rate:Q', title=None),
         color=alt.Color('denominazione_regione:N', legend=None, scale=alt.Scale(scheme='dark2')),
         facet=alt.Facet('denominazione_regione:N', columns=4, title=None),
         tooltip=[alt.Tooltip('positivity_rate:Q', title='Tasso positivi al tampone')]
